@@ -4,7 +4,7 @@ import SimpleCrypto from "../src/SimpleCrypto";
 
 const expect = chai.expect;
 const secretKey = SimpleCrypto.generateRandom();
-const instance = new SimpleCrypto(secretKey.toString());
+const instance = new SimpleCrypto({secret: secretKey.toString()});
 
 const object = {
   SimpleCrypto: "is great.",
