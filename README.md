@@ -34,6 +34,10 @@
   * [License](#license)
   * [Acknowledgments](#acknowledgments)
 
+## Changes in this specific fork
+
+This fork has several changes that differ from origin. For example, creating a new instance requires an object which has several parameters (instead of just a string). This allows customization of the secret, key size, random length, algorithm, and iterations.
+
 ## Changes Log (What's New)
 
 **What's New in 2.2.0**
@@ -53,10 +57,10 @@ To get this library included on your project, first, you can use package manager
 
 ```bash
 # If you're using NPM
-npm install --save simple-crypto-js
+npm install --save https://github.com/ChronSyn/simple-crypto-js
 
 # If you're using Yarn
-yarn add simple-crypto-js
+yarn add https://github.com/ChronSyn/simple-crypto-js
 ```
 
 Then, include **_SimpleCrypto_** your project. If you are using the new ECMAScript 6 (ECMAScript 2015) and later, you may use the new import statement:
@@ -81,17 +85,13 @@ var SimpleCrypto = require("simple-crypto-js").default;
 
 List of **_SimpleCrypto_** constructor parameter.
 
-| Parameter | Type     | Information                                                                                                           | Default     |
-| --------- | -------- | --------------------------------------------------------------------------------------------------------------------- | ----------- |
-| _secret_  | required | The secret string (key or password) that will be used to create the secret key for encryption and decryption process. | _undefined_ |
-
-List of **_SimpleCrypto_** instance's properties.
-
-| Property       | Information                                                                                                                    | Default     |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------- |
-| \__secret_     | Contains the secret string (key or password) that will be used to create the secret key for encryption and decryption process. | _undefined_ |
-| \__keySize_    | Contains a number that represent the size of the secret key.                                                                   | 256         |
-| \__iterations_ | Contains a number that represent the number of iterations done to create the secret key.                                       | 100         |
+| Parameter      | Type     | Information                                                                                                           | Default     |
+| -------------- | -------- | --------------------------------------------------------------------------------------------------------------------- | ----------- |
+| _secret_       | required | The secret string (key or password) that will be used to create the secret key for encryption and decryption process. | _undefined_ |
+| _keySize_      | optional | The size of the key used when performing the encryption.                                                              | 256         |
+| _iterations_   | optional | The number of iterations used during the key generation process.                                                      | 100         |
+| _randomLength_ | optional | Used when generating the salt and the intial vector                                                                   | 128         |
+| _algorithm_    | optional | One of `"SHA256" | "SHA224" | "SHA512" | "SHA384" | "SHA3" | "RIPEMD160" | "PBKDF2"`                                  | "PBKDF2"    |
 
 List of **_SimpleCrypto_** functions.
 
@@ -125,7 +125,7 @@ To encrypt and decrypt data, simply use `encrypt()` and `decrypt()` function fro
 // Or just defined the key by yourself (key is must!)
 var _secretKey = "some-unique-key";
 
-var simpleCrypto = new SimpleCrypto(_secretKey);
+var simpleCrypto = new SimpleCrypto({secret: _secretKey});
 
 var plainText = "Hello World!";
 var cipherText = simpleCrypto.encrypt(plainText);
@@ -144,8 +144,8 @@ You could also perform the encryption and decryption process using different **_
 
 ```javascript
 var _secretKey = "some-unique-key";
-var simpleCrypto1 = new SimpleCrypto(_secretKey);
-var simpleCrypto2 = new SimpleCrypto(_secretKey);
+var simpleCrypto1 = new SimpleCrypto({secret: _secretKey});
+var simpleCrypto2 = new SimpleCrypto({secret: _secretKey});
 
 var plainText = "Hello World!";
 // Encryption using the first instance (simpleCrypto1)
@@ -165,7 +165,7 @@ console.log("... done.");
 If you want to change the secret key of a **_SimpleCrypto_** instance, call the `setSecret()` function with the new secret as parameter.
 
 ```javascript
-var simpleCrypto = new SimpleCrypto("some-unique-key");
+var simpleCrypto = new SimpleCrypto({secret: "some-unique-key"});
 simpleCrypto.setSecret("new-more-unique-key");
 ```
 
@@ -180,7 +180,7 @@ To encrypt and decrypt JavaScript object literal, simply use `encrypt()` and `de
 
 ```javascript
 var _secretKey = SimpleCrypto.generateRandom();
-var simpleCrypto = new SimpleCrypto(_secretKey);
+var simpleCrypto = new SimpleCrypto({secret: _secretKey});
 
 var plainObject = {
   SimpleCrypto: "is great.",
